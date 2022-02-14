@@ -1,0 +1,6 @@
+.eslintrc.cjs
+svelte.config.js
+tsnode-loader.js
+src/hooks.ts
+src/lib/audio/audio.js
+src/lib/controllers/keyboard.ts
