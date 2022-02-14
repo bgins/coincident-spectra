@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
 
-  import {AdditiveSynth} from '$lib/audio/audio'
+  import { AdditiveSynth } from '$lib/audio/audio'
   import { Keyboard } from '$lib/controllers/keyboard'
   import { EventEmitter } from '$lib/common/event-emitter'
   
@@ -13,33 +13,23 @@
   controller.enable(noteEmitter)
 
   onMount(async () => {
-    await synth.initialize()
-
-    noteEmitter.addEventListener('play', midiNote => {
-      synth.play(midiNote)
-    })
-
-    noteEmitter.addEventListener('stop', midiNote => {
-      synth.stop(midiNote)
-    })
+    await synth.initialize(noteEmitter)
   })
 
 
   const setDevice = () => {
     if (window.innerWidth <= 768) {
         isMobileDevice = true
-      } else {
-        isMobileDevice = false
-      }
+    } else {
+      isMobileDevice = false
+    }
   }
 
   setDevice()
-
 </script>
 
 <svelte:window on:resize={setDevice} />
 
 <h2>Play notes on your keyboard.</h2>
-
 
 <style></style>
