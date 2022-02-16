@@ -4,11 +4,13 @@
   import { AdditiveSynth, setHarmonics, setSpectra } from '$lib/audio/audio'
   import { Keyboard } from '$lib/controllers/keyboard'
   import { EventEmitter } from '$lib/common/event-emitter'
-  
+  import partials from '$lib/audio/partials.json'
+
   const noteEmitter = new EventEmitter()
   const controller = new Keyboard()
   const synth = new AdditiveSynth()
   let isMobileDevice: boolean = false
+  let selectedPartials = 'harmonics'
 
   controller.enable(noteEmitter)
 
@@ -16,12 +18,19 @@
     await synth.initialize(noteEmitter)
   })
 
-
   const setDevice = () => {
     if (window.innerWidth <= 768) {
-        isMobileDevice = true
+      isMobileDevice = true
     } else {
       isMobileDevice = false
+    }
+  }
+
+  $ : {
+    if (selectedPartials === 'harmonics') {
+      setHarmonics()
+    } else {
+      setSpectra()
     }
   }
 
@@ -30,26 +39,69 @@
 
 <svelte:window on:resize={setDevice} />
 
-<h2>Quick demo of Harmonics vs 12-ED2 Spectra</h2>
-<button on:click={synth.start}>Start</button>
-<button on:click={setHarmonics}>Harmonics</button>
-<button on:click={setSpectra}>Spectra</button>
-<div class="row">
-  Harmonic multipliers
-  <code>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]</code>
-</div>
-<div class="row">
-  Spectral multipliers
-  <code>[1, 2, 2.997, 4, 5.04, 5.993, 7.127, 8, 8.98, 10.079, 11.314, 11.986, 12.699, 14.254, 15.102, 16]</code>
-</div>
-<div class="row">
-  Amplitudes
-  <code>[0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03,0.02, 0.01, 0.009, 0.008, 0.007, 0.006, 0.005, 0.004]</code>
+<div class="grid grid-flow-row auto-rows-max justify-center bg-neutral h-screen p-10 text-base-content">
+  <div class="card w-full bg-base-100 shadow-xl">
+    <div class="card-body">
+      <h1 class="text-4xl pb-7">Coincident Spectra</h1>
+      <div class="grid grid-flow-row auto-rows-max gap-7">
+        <div class="grid grid-flow-col auto-cols-max gap-4">
+          <button class="btn btn-primary" on:click={synth.start}>
+            Start Audio
+          </button>
+          <select class="select w-full max-w-xs select-primary">
+            <option disabled selected>Tuning System</option>
+            <option value="12-ed2">12-ED2</option>
+            <option value="19-ed2">19-ED2</option>
+          </select>
+          <select class="select w-full max-w-xs select-primary" bind:value={selectedPartials}>
+            <option value="harmonics">Harmonics</option>
+            <option value="spectra">Spectra</option>
+          </select>
+          <select class="select w-full max-w-xs select-primary">
+            <option disabled selected>Controller</option>
+            <option>Keyboard</option>
+            <option>MIDI</option>
+          </select>
+          <select class="select w-full max-w-xs select-primary">
+            <option disabled selected>MIDI Device</option>
+            <option>Arturia Keystep</option>
+            <option>Roland Keyboard</option>
+          </select>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="table table-compact w-full">
+            <thead>
+              <tr>
+                <th>Partial</th>
+                <th>Harmonics</th>
+                <th>Spectra</th>
+                <th>Gain</th>
+              </tr>
+            </thead>
+            <tbody>
+              {#each partials.harmonics as harmonic, index}
+                <tr>
+                  <th>1</th>
+                  <td>{harmonic}</td>
+                  <td>{partials.spectra[index]}</td>
+                  <td>
+                    <input
+                      type="range"
+                      min="0"
+                      max="100"
+                      value="40"
+                      class="range range-xs"
+                    />
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <style>
-  .row {
-    padding-top: 1rem
-  }
-
 </style>
