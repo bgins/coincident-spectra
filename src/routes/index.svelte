@@ -5,6 +5,7 @@
   import { Keyboard } from '$lib/controllers/keyboard'
   import { EventEmitter } from '$lib/common/event-emitter'
   import partials from '$lib/audio/partials.json'
+  import { drawbars } from '../stores'
 
   const noteEmitter = new EventEmitter()
   const controller = new Keyboard()
@@ -25,6 +26,13 @@
       isMobileDevice = false
     }
   }
+
+  const setDrawbar = (index: number, event: Event) => {
+    const { value } = event.target as HTMLInputElement
+
+    drawbars.update(drawbars => { drawbars[index] = (+value / 1000); return drawbars })
+  }
+
 
   $ : {
     if (selectedPartials === 'harmonics') {
@@ -89,8 +97,9 @@
                       type="range"
                       min="0"
                       max="100"
-                      value="40"
+                      value={($drawbars[index] * 1000).toString()}
                       class="range range-xs"
+                      on:change={event => setDrawbar(index, event)}
                     />
                   </td>
                 </tr>

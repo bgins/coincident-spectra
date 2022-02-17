@@ -1,35 +1,41 @@
 import { ElementaryWebAudioRenderer as core, el } from '@elemaudio/core-lite';
 import { get } from 'svelte/store'
 
-import { audioStore } from '../../stores'
+import { audioStore, drawbars } from '../../stores'
 import partialsData from '$lib/audio/partials.json'
 
 let partials = partialsData.harmonics
-const amplitudes = [0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.009, 0.008, 0.007, 0.006, 0.005, 0.004]
 
 export const setHarmonics = () => { partials = partialsData.harmonics }
 export const setSpectra = () => { partials = partialsData.spectra }
 
 const synth = (voices) => {
+  let gains = []
+
+  drawbars.subscribe(vals => {
+    gains = vals
+  })
+
+  const halfGains = Math.ceil(gains.length / 2)
+  const firstGains = gains.slice(0, halfGains)
+  const secondGains = gains.slice(-halfGains)
+
   const halfPartials = Math.ceil(partials.length / 2)
   const firstPartials = partials.slice(0, halfPartials)
   const secondPartials = partials.slice(-halfPartials)
 
-  const halfAmplitudes = Math.ceil(amplitudes.length / 2)
-  const firstAmplitudes = amplitudes.slice(0, halfAmplitudes)
-  const secondAmplitudes = amplitudes.slice(-halfAmplitudes)
 
   return el.add(voices.map(voice => {
     return el.add(
       el.add(firstPartials.map((partial, index) => {
         return el.mul(
-          el.const({ key: `${voice.key}:gate:${index}`, value: voice.gate * firstAmplitudes[index] }),
+          el.const({ key: `${voice.key}:gate:${index}`, value: voice.gate * firstGains[index] }),
           el.cycle(el.const({ key: `${voice.key}:freq:${index}`, value: voice.freq * partial }))
         )
       })),
       el.add(secondPartials.map((partial, index) => {
         return el.mul(
-          el.const({ key: `${voice.key}:gate:m${index}`, value: voice.gate * secondAmplitudes[index] }),
+          el.const({ key: `${voice.key}:gate:m${index}`, value: voice.gate * secondGains[index] }),
           el.cycle(el.const({ key: `${voice.key}:freq:m${index}`, value: voice.freq * partial }))
         )
       }))
