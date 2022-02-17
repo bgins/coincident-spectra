@@ -1,6 +1,7 @@
 import { ElementaryWebAudioRenderer as core, el } from '@elemaudio/core-lite';
 import { get } from 'svelte/store'
 
+import { halve } from '../utils'
 import { audioStore, drawbars } from '../../stores'
 import partialsData from '$lib/audio/partials.json'
 
@@ -16,14 +17,8 @@ const synth = (voices) => {
     gains = vals
   })
 
-  const halfGains = Math.ceil(gains.length / 2)
-  const firstGains = gains.slice(0, halfGains)
-  const secondGains = gains.slice(-halfGains)
-
-  const halfPartials = Math.ceil(partials.length / 2)
-  const firstPartials = partials.slice(0, halfPartials)
-  const secondPartials = partials.slice(-halfPartials)
-
+  const { firstHalf: firstGains, secondHalf: secondGains } = halve(gains)
+  const { firstHalf: firstPartials, secondHalf: secondPartials} = halve(partials)
 
   return el.add(voices.map(voice => {
     return el.add(
