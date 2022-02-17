@@ -81,7 +81,7 @@
             <tbody>
               {#each partials.harmonics as harmonic, index}
                 <tr>
-                  <th>1</th>
+                  <th>{index + 1}</th>
                   <td>{harmonic}</td>
                   <td>{partials.spectra[index]}</td>
                   <td>
