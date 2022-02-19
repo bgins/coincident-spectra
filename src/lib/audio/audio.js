@@ -17,26 +17,33 @@ const synth = (voices) => {
     gains = vals
   })
 
-  const { firstHalf: firstGains, secondHalf: secondGains } = halve(gains)
-  const { firstHalf: firstPartials, secondHalf: secondPartials} = halve(partials)
-
   return el.add(voices.map(voice => {
-    return el.add(
-      el.add(firstPartials.map((partial, index) => {
-        return el.mul(
-          el.const({ key: `${voice.key}:gate:${index}`, value: voice.gate * firstGains[index] }),
-          el.cycle(el.const({ key: `${voice.key}:freq:${index}`, value: voice.freq * partial }))
-        )
-      })),
-      el.add(secondPartials.map((partial, index) => {
-        return el.mul(
-          el.const({ key: `${voice.key}:gate:m${index}`, value: voice.gate * secondGains[index] }),
-          el.cycle(el.const({ key: `${voice.key}:freq:m${index}`, value: voice.freq * partial }))
-        )
-      }))
-    )
+    return core.createNode(core.memo(additiveVoice), { voice, partials, gains }, [])
   }))
 }
+
+const additiveVoice = ({ props }) => {
+  const { voice, partials, gains } = props
+
+  const { firstHalf: firstGains, secondHalf: secondGains } = halve(gains)
+  const { firstHalf: firstPartials, secondHalf: secondPartials } = halve(partials)
+
+  return el.add(
+    el.add(firstPartials.map((partial, index) => {
+      return el.mul(
+        el.const({ key: `${voice.key}:gate:l${index}`, value: voice.gate * firstGains[index] }),
+        el.cycle(el.const({ key: `${voice.key}:freq:l${index}`, value: voice.freq * partial }))
+      )
+    })),
+    el.add(secondPartials.map((partial, index) => {
+      return el.mul(
+        el.const({ key: `${voice.key}:gate:h${index}`, value: voice.gate * secondGains[index] }),
+        el.cycle(el.const({ key: `${voice.key}:freq:h${index}`, value: voice.freq * partial }))
+      )
+    }))
+  )
+}
+
 export class AdditiveSynth {
   voices = []
 
@@ -83,12 +90,18 @@ export class AdditiveSynth {
   }
 }
 
+const render = (voices) => {
+  const highpassOut = el.highpass(60, 0.1, voices)
+
+  core.render(highpassOut, highpassOut);
+}
+
 const play = (voices, midiNote) => {
   const { elementaryReady } = get(audioStore)
-  const updatedVoices = updateVoices(voices, midiNote);
+  const updatedVoices = updateVoices(voices, midiNote)
 
   if (elementaryReady) {
-    core.render(synth(updatedVoices), synth(updatedVoices));
+    render(synth(updatedVoices))
   }
 
   return updatedVoices
@@ -101,9 +114,9 @@ const stop = (voices, midiNote) => {
 
   if (elementaryReady) {
     if (updatedVoices.length > 0) {
-      core.render(synth(updatedVoices), synth(updatedVoices));
+      render(synth(updatedVoices))
     } else {
-      core.render(el.const(0), el.const(0));
+      render(el.const(0))
     }
   }
 
