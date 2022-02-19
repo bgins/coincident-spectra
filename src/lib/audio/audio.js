@@ -98,7 +98,7 @@ const render = (voices) => {
 
 const play = (voices, midiNote) => {
   const { elementaryReady } = get(audioStore)
-  const updatedVoices = updateVoices(voices, midiNote)
+  const updatedVoices = updateVoices(voices, midiNote).slice(-8)
 
   if (elementaryReady) {
     render(synth(updatedVoices))
