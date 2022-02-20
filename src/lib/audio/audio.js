@@ -77,6 +77,10 @@ export class AdditiveSynth {
     noteEmitter.addEventListener('stop', midiNote => {
       this.voices = stop(this.voices, midiNote)
     })
+
+    noteEmitter.addEventListener('stopAll', () => {
+      this.voices = stopAll()
+    })
   }
 
   start = () => {
@@ -121,6 +125,15 @@ const stop = (voices, midiNote) => {
   }
 
   return updatedVoices
+}
+
+const stopAll = () => {
+  const { elementaryReady } = get(audioStore)
+  if (elementaryReady) {
+      render(el.const(0))
+  }
+
+  return []
 }
 
 const updateVoices = (voices, midiNote) => {
