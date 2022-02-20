@@ -161,7 +161,7 @@ const stopAll = () => {
 
 const updateVoices = (voices, midiNote) => {
   const baseFrequency = 440
-  const baseMidiNote = 60
+  const baseMidiNote = 69
   const divisions = 12
   const key = `v${midiNote}`
   const freq = baseFrequency * 2 ** ((midiNote - baseMidiNote) / divisions)
