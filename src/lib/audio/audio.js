@@ -48,10 +48,13 @@ export class AdditiveSynth {
   voices = []
 
   constructor() {
-    const { context } = get(audioStore)
+    const store = get(audioStore)
 
-    if (!context) {
-      audioStore.update(store => ({ ...store, context: new window.AudioContext() }))
+    if (!store.context) {
+      const context = new window.AudioContext()
+
+      audioStore.update(store => ({ ...store, context, contextState: 'suspended' }))
+      context.suspend()
     }
 
     core.on('load', function () {
@@ -62,35 +65,47 @@ export class AdditiveSynth {
   initialize = async (noteEmitter) => {
     const { context } = get(audioStore)
 
-    let node = await core.initialize(context, {
+    const node = await core.initialize(context, {
       numberOfInputs: 0,
       numberOfOutputs: 1,
       outputChannelCount: [2],
     });
 
     node.connect(context.destination);
-
-    noteEmitter.addEventListener('play', midiNote => {
-      this.voices = play(this.voices, midiNote)
-    })
-
-    noteEmitter.addEventListener('stop', midiNote => {
-      this.voices = stop(this.voices, midiNote)
-    })
-
-    noteEmitter.addEventListener('stopAll', () => {
-      this.voices = stopAll()
-    })
   }
 
-  start = () => {
+
+  start = (noteEmitter) => {
     const { context } = get(audioStore)
+
+    noteEmitter.addEventListener('play', this.playNote)
+    noteEmitter.addEventListener('stop', this.stopNote)
+    noteEmitter.addEventListener('stopAll', this.stopAllNotes)
     context.resume()
+    audioStore.update(store => ({ ...store, contextState: 'running' }))
   }
 
-  pause = () => {
+  pause = (noteEmitter) => {
     const { context } = get(audioStore)
+
+    stopAll()
+    noteEmitter.removeEventListener('play', this.playNote)
+    noteEmitter.removeEventListener('stop', this.stopNote)
+    noteEmitter.removeEventListener('stopAll', this.stopAllNotes)
     context.suspend()
+    audioStore.update(store => ({ ...store, contextState: 'suspended' }))
+  }
+
+  playNote = midiNote => {
+    this.voices = play(this.voices, midiNote)
+  }
+
+  stopNote = midiNote => {
+    this.voices = stop(this.voices, midiNote)
+  }
+
+  stopAllNotes = () => {
+    this.voices = stopAll()
   }
 
   updateParams = () => {

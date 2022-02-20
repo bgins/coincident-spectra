@@ -6,7 +6,7 @@
   import { Midi } from '$lib/controllers/midi'
   import { EventEmitter } from '$lib/common/event-emitter'
   import partials from '$lib/audio/partials.json'
-  import { drawbars, midiInputs, midiStatus } from '../stores'
+  import { audioStore, drawbars, midiInputs, midiStatus } from '../stores'
 
   const noteEmitter = new EventEmitter()
   const keyboard = new Keyboard()
@@ -27,6 +27,14 @@
     } else {
       isMobileDevice = false
     }
+  }
+
+  const startAudio = () => {
+    synth.start(noteEmitter)
+  }
+
+  const pauseAudio = () => {
+    synth.pause(noteEmitter)
   }
 
   const setController = event => {
@@ -79,9 +87,15 @@
       <h1 class="text-4xl pb-7">Coincident Spectra</h1>
       <div class="grid grid-flow-row auto-rows-max gap-7">
         <div class="grid grid-flow-col auto-cols-max gap-4">
-          <button class="btn btn-primary" on:click={synth.start}>
-            Start Audio
-          </button>
+          {#if $audioStore.contextState === 'running'}
+            <button class="btn btn-primary" on:click={pauseAudio}>
+              Pause Audio
+            </button>
+          {:else}
+            <button class="btn btn-primary" on:click={startAudio}>
+              Start Audio
+            </button>
+          {/if}
           <select class="select w-full max-w-xs select-primary">
             <option disabled selected>Tuning System</option>
             <option value="12-ed2">12-ED2</option>
