@@ -92,6 +92,14 @@ export class AdditiveSynth {
     const { context } = get(audioStore)
     context.suspend()
   }
+
+  updateParams = () => {
+    const { elementaryReady } = get(audioStore)
+
+    if (elementaryReady) {
+      render(synth(this.voices))
+    }
+  }
 }
 
 const render = (voices) => {
@@ -130,7 +138,7 @@ const stop = (voices, midiNote) => {
 const stopAll = () => {
   const { elementaryReady } = get(audioStore)
   if (elementaryReady) {
-      render(el.const(0))
+    render(el.const(0))
   }
 
   return []

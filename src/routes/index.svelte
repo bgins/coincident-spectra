@@ -54,6 +54,8 @@
       drawbars[index] = +value / 1000
       return drawbars
     })
+
+    synth.updateParams()
   }
 
   $: {
@@ -145,7 +147,7 @@
                       max="100"
                       value={($drawbars[index] * 1000).toString()}
                       class="range range-xs"
-                      on:change={event => setDrawbar(index, event)}
+                      on:input={event => setDrawbar(index, event)}
                     />
                   </td>
                 </tr>
