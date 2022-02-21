@@ -62,7 +62,7 @@ export class AdditiveSynth {
     });
   }
 
-  initialize = async (noteEmitter) => {
+  initialize = async () => {
     const { context } = get(audioStore)
 
     const node = await core.initialize(context, {

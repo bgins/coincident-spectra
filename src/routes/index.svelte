@@ -15,14 +15,13 @@
   const keyboard = new Keyboard()
   const midi = new Midi()
   const synth = new AdditiveSynth()
-  let selectedPartials = 'harmonics'
   let view: View = 'instrument'
   let isMobileDevice: boolean = false
 
   keyboard.enable(noteEmitter)
 
   onMount(async () => {
-    await synth.initialize(noteEmitter)
+    await synth.initialize()
   })
 
   const setDevice = () => {
@@ -78,12 +77,17 @@
     synth.updateParams()
   }
 
-  $: {
-    if (selectedPartials === 'harmonics') {
+  const setPartials = event => {
+    const { value: selected } = event.target as HTMLInputElement
+    console.log(selected)
+
+    if (selected === 'harmonics') {
       setHarmonics()
     } else {
       setSpectra()
     }
+
+    synth.updateParams()
   }
 
   setDevice()
@@ -133,7 +137,7 @@
             </select>
             <select
               class="select w-full max-w-xs select-primary"
-              bind:value={selectedPartials}
+              on:change={setPartials}
             >
               <option value="harmonics">Harmonics</option>
               <option value="spectra">Spectra</option>
