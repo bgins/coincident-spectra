@@ -185,14 +185,19 @@
                     <td>{harmonic}</td>
                     <td>{partials.spectra[index]}</td>
                     <td>
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={($drawbars[index] * 1000).toString()}
-                        class="range range-xs"
-                        on:input={event => setDrawbar(index, event)}
-                      />
+                      <div
+                        class="tooltip tooltip-left w-full"
+                        data-tip={($drawbars[index] * 1000).toString()}
+                      >
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={($drawbars[index] * 1000).toString()}
+                          class="range range-xs"
+                          on:input={event => setDrawbar(index, event)}
+                        />
+                      </div>
                     </td>
                   </tr>
                 {/each}
