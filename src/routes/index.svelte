@@ -61,6 +61,12 @@
 
     synth.stopAllNotes()
     tuning.set(selectedTuning)
+
+    if (selectedPartials === 'harmonics') {
+      setHarmonics()
+    } else {
+      setSpectra()
+    }
   }
 
   const setController = event => {
