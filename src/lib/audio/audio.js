@@ -1,14 +1,22 @@
 import { ElementaryWebAudioRenderer as core, el } from '@elemaudio/core-lite';
 import { get } from 'svelte/store'
 
-import { halve } from '../utils'
-import { audioStore, drawbars } from '../../stores'
+import { tune } from '$lib/audio/tuning'
+import { halve } from '$lib/utils'
+import { audioStore, drawbars, tuning } from '../../stores'
 import partialsData from '$lib/audio/partials.json'
 
-let partials = partialsData.harmonics
+const selectedTuning = get(tuning)
+let partials = partialsData[selectedTuning].harmonics
 
-export const setHarmonics = () => { partials = partialsData.harmonics }
-export const setSpectra = () => { partials = partialsData.spectra }
+export const setHarmonics = () => { 
+  const selectedTuning = get(tuning)
+  partials = partialsData[selectedTuning].harmonics 
+}
+export const setSpectra = () => { 
+  const selectedTuning = get(tuning)
+  partials = partialsData[selectedTuning].spectra 
+}
 
 const synth = (voices) => {
   let gains = []
@@ -17,8 +25,12 @@ const synth = (voices) => {
     gains = vals
   })
 
+  // Remove null partials and their associated gains
+  const filteredGains = gains.filter((_, index) => partials[index] !== null)
+  const filteredPartials = partials.filter(partial => partial !== null)
+
   return el.add(voices.map(voice => {
-    return core.createNode(core.memo(additiveVoice), { voice, partials, gains }, [])
+    return core.createNode(core.memo(additiveVoice), { voice, partials: filteredPartials, gains: filteredGains}, [])
   }))
 }
 
@@ -160,11 +172,8 @@ const stopAll = () => {
 }
 
 const updateVoices = (voices, midiNote) => {
-  const baseFrequency = 440
-  const baseMidiNote = 69
-  const divisions = 12
   const key = `v${midiNote}`
-  const freq = baseFrequency * 2 ** ((midiNote - baseMidiNote) / divisions)
+  const freq = tune(midiNote)
 
   console.log(`MIDI note: ${midiNote}`, `, Frequency: ${freq}`)
 

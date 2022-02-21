@@ -6,7 +6,13 @@
   import { Midi } from '$lib/controllers/midi'
   import { EventEmitter } from '$lib/common/event-emitter'
   import partials from '$lib/audio/partials.json'
-  import { audioStore, drawbars, midiInputs, midiStatus } from '../stores'
+  import {
+    audioStore,
+    drawbars,
+    midiInputs,
+    midiStatus,
+    tuning
+  } from '../stores'
   import Guide from '$components/Guide.svelte'
 
   type View = 'instrument' | 'info'
@@ -16,6 +22,7 @@
   const midi = new Midi()
   const synth = new AdditiveSynth()
   let view: View = 'instrument'
+  let selectedPartials = 'harmonics'
   let isMobileDevice: boolean = false
 
   keyboard.enable(noteEmitter)
@@ -46,6 +53,13 @@
 
   const pauseAudio = () => {
     synth.pause(noteEmitter)
+  }
+
+  const setTuning = event => {
+    const { value: selectedTuning } = event.target as HTMLInputElement
+
+    synth.stopAllNotes()
+    tuning.set(selectedTuning)
   }
 
   const setController = event => {
@@ -79,7 +93,6 @@
 
   const setPartials = event => {
     const { value: selected } = event.target as HTMLInputElement
-    console.log(selected)
 
     if (selected === 'harmonics') {
       setHarmonics()
@@ -87,6 +100,7 @@
       setSpectra()
     }
 
+    selectedPartials = selected
     synth.updateParams()
   }
 
@@ -130,10 +144,15 @@
                 Start Audio
               </button>
             {/if}
-            <select class="select w-full max-w-xs select-primary">
-              <option disabled selected>Tuning System</option>
-              <option value="12-ed2">12-ED2</option>
-              <option value="19-ed2">19-ED2</option>
+            <select
+              class="select w-full max-w-xs select-primary"
+              on:change={setTuning}
+            >
+              <option disabled selected value="ED2-12">Tuning System</option>
+              <option value="ED2-5">5-TET</option>
+              <option value="ED2-8">8-TET</option>
+              <option value="ED2-12">12-TET</option>
+              <option value="ED2-13">13-TET</option>
             </select>
             <select
               class="select w-full max-w-xs select-primary"
@@ -183,25 +202,27 @@
                 </tr>
               </thead>
               <tbody>
-                {#each partials.harmonics as harmonic, index}
+                {#each partials[$tuning].harmonics as harmonic, index}
                   <tr>
                     <th>{index + 1}</th>
                     <td>{harmonic}</td>
-                    <td>{partials.spectra[index]}</td>
+                    <td>{partials[$tuning].spectra[index] ?? '—'}</td>
                     <td>
-                      <div
-                        class="tooltip tooltip-left w-full"
-                        data-tip={($drawbars[index] * 1000).toString()}
-                      >
-                        <input
-                          type="range"
-                          min="0"
-                          max="100"
-                          value={($drawbars[index] * 1000).toString()}
-                          class="range range-xs"
-                          on:input={event => setDrawbar(index, event)}
-                        />
-                      </div>
+                      {#if selectedPartials === 'harmonics' || (selectedPartials === 'spectra' && partials[$tuning].spectra[index])}
+                        <div
+                          class="tooltip tooltip-left w-full"
+                          data-tip={($drawbars[index] * 1000).toString()}
+                        >
+                          <input
+                            type="range"
+                            min="0"
+                            max="100"
+                            value={($drawbars[index] * 1000).toString()}
+                            class="range range-xs"
+                            on:input={event => setDrawbar(index, event)}
+                          />
+                        </div>
+                      {/if}
                     </td>
                   </tr>
                 {/each}
