@@ -123,7 +123,7 @@ export class AdditiveSynth {
   updateParams = () => {
     const { elementaryReady } = get(audioStore)
 
-    if (elementaryReady) {
+    if (elementaryReady && this.voices.length > 0) {
       render(synth(this.voices))
     }
   }
