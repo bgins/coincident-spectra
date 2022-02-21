@@ -2,5 +2,5 @@
 svelte.config.js
 tsnode-loader.js
 src/hooks.ts
-src/lib/audio/audio.js
+src/lib/audio/additive-synth.js
 src/lib/controllers/keyboard.ts

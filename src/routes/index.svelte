@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte'
 
-  import { AdditiveSynth, setHarmonics, setSpectra } from '$lib/audio/audio'
+  import { setHarmonics, setSpectra } from '$lib/audio/additive-synth'
+  import { Synth } from '$lib/audio/audio'
   import { Keyboard } from '$lib/controllers/keyboard'
   import { Midi } from '$lib/controllers/midi'
   import { EventEmitter } from '$lib/common/event-emitter'
@@ -20,7 +21,7 @@
   const noteEmitter = new EventEmitter()
   const keyboard = new Keyboard()
   const midi = new Midi()
-  const synth = new AdditiveSynth()
+  const synth = new Synth()
   let view: View = 'instrument'
   let selectedPartials = 'harmonics'
   let isMobileDevice: boolean = false
