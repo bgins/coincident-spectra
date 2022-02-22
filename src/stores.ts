@@ -11,7 +11,7 @@ type AudioStore = {
 
 export const audioStore: Writable<AudioStore> = writable({ context: null, contextState: 'closed', elementaryReady: false })
 
-export const drawbars: Writable<number[]> = writable([0.1, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03, 0.02, 0.01, 0.009, 0.008, 0.007, 0.006, 0.005, 0.004])
+export const drawbars: Writable<number[]> = writable([0.1, 0.05, 0.0333, 0.025, 0.02, 0.0167, 0.0143, 0.0125, 0.0111, 0.01, 0.0091, 0.0083, 0.0077, 0.0071, 0.0067, 0.0063])
 
 export const tuning: Writable<string> = writable('ED2-12')
 

@@ -218,12 +218,13 @@
                       {#if selectedPartials === 'harmonics' || (selectedPartials === 'spectra' && partials[$tuning].spectra[index])}
                         <div
                           class="tooltip tooltip-left w-full"
-                          data-tip={($drawbars[index] * 1000).toString()}
+                          data-tip={(Math.trunc($drawbars[index] * 10000) / 10).toString()}
                         >
                           <input
                             type="range"
                             min="0"
                             max="100"
+                            step="0.1"
                             value={($drawbars[index] * 1000).toString()}
                             class="range range-xs"
                             on:input={event => setDrawbar(index, event)}
