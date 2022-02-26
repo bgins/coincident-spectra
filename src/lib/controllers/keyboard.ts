@@ -71,15 +71,11 @@ export class Keyboard {
   noteEmitter: EventEmitter
   keySubscription: Subscription
 
-  // enable(instrument: IInstrument) {
   enable(noteEmitter: EventEmitter) {
-    // stop all notes before patching in a new instrument
     if (this.noteEmitter) {
-      // this.instrument.stopAllNotes()
       this.noteEmitter.dispatchEvent('stopAll')
     }
 
-    // this.instrument = instrument
     this.noteEmitter = noteEmitter
 
     if (!this.keySubscription) {
@@ -90,13 +86,11 @@ export class Keyboard {
           switch (key.type) {
             case 'keydown':
               if (!key.shiftKey && !key.ctrlKey && !key.altKey && !key.metaKey) {
-                // this.instrument.playNote(midiNote)
                 this.noteEmitter.dispatchEvent('play', midiNote)
               }
               break;
 
             case 'keyup':
-              // this.instrument.stopNote(midiNote)
               this.noteEmitter.dispatchEvent('stop', midiNote)
               break;
 
