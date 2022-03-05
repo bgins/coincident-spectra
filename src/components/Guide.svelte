@@ -53,7 +53,7 @@
       >
         Tuning, Timbre, Spectrum, Scale
       </a>
-      on Sethares' website and consider picking up a copy of his book with the same
+      on Sethares' website and consider picking up a copy of his book by the same
       name.
     </p>
     <p>
