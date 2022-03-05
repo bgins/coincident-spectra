@@ -13,7 +13,7 @@ export const tune = (midiNote: number): number => {
 }
 
 const getDivisions = tuning => {
-  switch(tuning) {
+  switch (tuning) {
     case 'ED2-5':
       return 5
 
@@ -21,12 +21,12 @@ const getDivisions = tuning => {
       return 8
 
     case 'ED2-12':
-      return 12 
+      return 12
 
     case 'ED2-13':
-      return 13 
+      return 13
 
     default:
-      return 12 
+      return 12
   }
 }
