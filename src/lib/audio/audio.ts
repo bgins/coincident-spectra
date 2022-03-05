@@ -117,6 +117,7 @@ const updateVoices = (voices: Voice[], midiNote: number): Voice[] => {
 
 const render = (voices: Voice[]): void => {
   const highpassOut = el.highpass(60, 0.1, voices)
+  const gainOut = el.mul(highpassOut, 3)
 
-  core.render(highpassOut, highpassOut)
+  core.render(gainOut, gainOut)
 }
