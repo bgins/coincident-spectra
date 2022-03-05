@@ -24,21 +24,12 @@
   const synth = new Synth()
   let view: View = 'instrument'
   let selectedPartials = 'harmonics'
-  let isMobileDevice: boolean = false
 
   keyboard.enable(noteEmitter)
 
   onMount(async () => {
     await synth.initialize()
   })
-
-  const setDevice = () => {
-    if (window.innerWidth <= 768) {
-      isMobileDevice = true
-    } else {
-      isMobileDevice = false
-    }
-  }
 
   const showInfo = () => {
     view = 'info'
@@ -110,11 +101,7 @@
     selectedPartials = selected
     synth.updateParams()
   }
-
-  setDevice()
 </script>
-
-<svelte:window on:resize={setDevice} />
 
 <div
   class="grid grid-flow-row auto-rows-max justify-center bg-neutral h-screen p-10 text-base-content"
