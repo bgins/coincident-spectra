@@ -41,3 +41,9 @@ The built site publishes with the [Fission CLI](https://guide.fission.codes/deve
 Publishing from the command line is configured in [fission.yaml](fission.yaml). The publish action is configured in [publish.yml](.github/workflows/publish.yml).
 
 See the [Fission Guide](https://guide.fission.codes/developers/installation) and the publish action README if you would like to publish to Fission. Mostly this means making a Fission account with the CLI, registering a new app, and updating the endpoints in `fission.yaml` and `publish.yml`.
+
+## License
+
+The source code for Coincident Spectra is available under the Apache 2.0 license. Please consult the [Elementary License](https://www.elementary.audio/license) for additional instructions on using the Elementary SDK.
+
+The [social preview image](static/coincident-spectra.png) was created by Jacky Ligon and is under copyright. Please contact the artist if you wish to re-use the image.

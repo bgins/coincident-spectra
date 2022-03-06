@@ -65,13 +65,11 @@
     >
       Jacky Ligon 
     </a>
-
-
-
       for guiding the development of Coincident
       Spectra, and for generously providing the social preview image. The image
-      is dated 2022.
+      is copyright Jacky Ligon, 2022.
     </p>
+
     <p>
       Coincident Spectra was made with
       <a
@@ -81,6 +79,26 @@
       >
         Elementary Audio
       </a>.
+
     </p>
+    <p>
+      The
+      <a
+        class="link link-primary"
+        href="https://github.com/bgins/coincident-spectra"
+        target="__blank"
+      >
+        source code
+      </a>
+      for Coincident Spectra is available under the Apache 2.0 license. Please consult the
+      <a
+        class="link link-primary"
+        href="https://www.elementary.audio/license"
+        target="__blank"
+      >
+      Elementary License
+      </a>
+      for additional instructions on using the Elementary SDK.
+      </p>
   </div>
 </div>
