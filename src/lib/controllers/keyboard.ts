@@ -1,5 +1,5 @@
 import { fromEvent, Subscription } from 'rxjs'
-import { distinctUntilChanged, merge, mergeMap, groupBy } from 'rxjs/operators'
+import { distinctUntilChanged, mergeWith, mergeMap, groupBy } from 'rxjs/operators'
 
 import type { EventEmitter } from '$lib/common/event-emitter'
 
@@ -8,7 +8,7 @@ const keyUps = fromEvent<KeyboardEvent>(document, 'keyup')
 
 const keyPresses =
   keyDowns.pipe(
-    merge(keyUps),
+    mergeWith(keyUps),
     groupBy((e: KeyboardEvent) => e.code),
     mergeMap(group =>
       group.pipe(
