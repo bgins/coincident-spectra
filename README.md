@@ -16,7 +16,7 @@ npm install
 
 ## Develop
 
-To work on the application locally:
+Work on the application in local development.
 
 ```shell
 npm run dev
@@ -40,7 +40,7 @@ The built site publishes with the [Fission CLI](https://guide.fission.codes/deve
 
 Publishing from the command line is configured in [fission.yaml](fission.yaml). The publish action is configured in [publish.yml](.github/workflows/publish.yml).
 
-See the [Fission Guide](https://guide.fission.codes/developers/installation) and the publish action README if you would like to publish to Fission. Mostly this means making a Fission account with the CLI, registering a new app, and updating the endpoints in `fission.yaml` and `publish.yml`.
+See the [Fission Guide](https://guide.fission.codes/developers/installation) and the publish action README if you would like to publish to Fission. At a high level, the steps are: make a Fission account with the Fission CLI, register a new app, add your machine key as a repository secret, and update the endpoints in `fission.yaml` and `publish.yml`.
 
 ## License
 
