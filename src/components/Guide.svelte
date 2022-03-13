@@ -4,8 +4,8 @@
     <p>
       Coincident Spectra is an additive synthesizer that generates sounds from
       16 sine wave 'partials' that can be switched between harmonics and
-      spectra. Harmonics are integer multiples of the fundamental frequency.
-      Spectra remap harmonics so that the partial tones coincide with a selected
+      spectra. Harmonics are integer multiples of a fundamental frequency.
+      Spectra remap harmonics so that the partials coincide with a selected
       equal temperament.
     </p>
     <p>
@@ -37,7 +37,7 @@
   <div class="grid grid-flow-row auto-rows-max gap-2">
     <h2 class="text-2xl">Adjust Timbre</h2>
     <p>
-      The gain sliders control the amplitude of each partial. Adjusting them
+      The gain sliders control the gain of each partial. Adjusting them
       changes the timbre of the instrument.
     </p>
   </div>
