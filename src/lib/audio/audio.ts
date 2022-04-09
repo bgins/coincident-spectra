@@ -1,5 +1,8 @@
-import { ElementaryWebAudioRenderer as core, el } from '@elemaudio/core-lite'
+import type { NodeRepr_t } from '@elemaudio/core'
+
+import { el } from '@elemaudio/core'
 import { get } from 'svelte/store'
+import WebRenderer from '@elemaudio/web-renderer-lite'
 
 import { additiveSynth } from '$lib/audio/additive-synth'
 import { tune } from '$lib/audio/tuning'
@@ -7,18 +10,27 @@ import { audioStore } from '../../stores'
 
 import type { EventEmitter } from '$lib/common/event-emitter'
 
-type Voice = { gate: number; freq: number; key: string }
+
+export type Voice = { gate: number; freq: number; key: string }
+
 
 export class Synth {
   voices: Voice[] = []
 
   constructor() {
     const store = get(audioStore)
+    const core = new WebRenderer()
 
     if (!store.context) {
       const context = new window.AudioContext()
 
-      audioStore.update(store => ({ ...store, context, contextState: 'suspended' }))
+      audioStore.update(store => ({
+        ...store,
+        context,
+        contextState: 'suspended',
+        core
+      }))
+
       void context.suspend()
     }
 
@@ -28,7 +40,7 @@ export class Synth {
   }
 
   initialize = async (): Promise<void> => {
-    const { context } = get(audioStore)
+    const { context, core } = get(audioStore)
 
     const node = await core.initialize(context, {
       numberOfInputs: 0,
@@ -81,7 +93,7 @@ export class Synth {
       if (this.voices.length > 0) {
         render(additiveSynth(this.voices))
       } else {
-        render(el.const(0))
+        render(el.const({ key: 'silence', value: 0 }))
       }
     }
   }
@@ -92,7 +104,7 @@ export class Synth {
     this.voices = []
 
     if (elementaryReady) {
-      render(el.const(0))
+      render(el.const({ key: 'silence', value: 0 }))
     }
   }
 
@@ -115,8 +127,9 @@ const updateVoices = (voices: Voice[], midiNote: number): Voice[] => {
   return voices.filter(voice => voice.key !== key).concat({ gate: 0.1, freq, key })
 }
 
-const render = (voices: Voice[]): void => {
-  const highpassOut = el.highpass(60, 0.1, voices)
+const render = (ensemble: number | NodeRepr_t): void => {
+  const { core } = get(audioStore)
+  const highpassOut = el.highpass(60, 0.1, ensemble)
   const gainOut = el.mul(highpassOut, 3)
 
   core.render(gainOut, gainOut)
