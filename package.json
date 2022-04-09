@@ -40,7 +40,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@elemaudio/core-lite": "^0.11.0",
+    "@elemaudio/core": "^1.0.0",
+    "@elemaudio/web-renderer-lite": "^1.0.0",
     "rxjs": "^7.5.4"
   },
   "ava": {
