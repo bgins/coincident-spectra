@@ -129,8 +129,8 @@ const updateVoices = (voices: Voice[], midiNote: number): Voice[] => {
 
 const render = (ensemble: number | NodeRepr_t): void => {
   const { core } = get(audioStore)
-  const highpassOut = el.highpass(60, 0.1, ensemble)
-  const gainOut = el.mul(highpassOut, 3)
+  const dcblockOut = el.dcblock(ensemble)
+  const gainOut = el.mul(dcblockOut, 3)
 
   core.render(gainOut, gainOut)
 }
