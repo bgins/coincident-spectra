@@ -17,15 +17,7 @@ const config = {
       pages: 'build',
       assets: 'build',
       fallback: null
-    }),
-    vite: {
-      resolve: {
-        alias: {
-          $components: resolve('./src/components'),
-          $static: resolve('./static')
-        }
-      },
-    }
+    })
   }
 }
 

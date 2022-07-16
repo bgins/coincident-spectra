@@ -2,9 +2,9 @@
   "name": "coincident-spectra",
   "version": "0.1.0",
   "scripts": {
-    "dev": "svelte-kit dev",
-    "build": "svelte-kit build",
-    "preview": "svelte-kit preview",
+    "dev": "vite dev --port 3000",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "ava src/**/*.test.ts",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
@@ -12,8 +12,8 @@
     "format": "prettier --write --plugin-search-dir=. ."
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "next",
-    "@sveltejs/kit": "next",
+    "@sveltejs/adapter-static": "1.0.0-next.36",
+    "@sveltejs/kit": "1.0.0-next.377",
     "@tailwindcss/typography": "^0.5.2",
     "@types/webmidi": "^2.0.6",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
@@ -36,7 +36,8 @@
     "ts-node": "^10.4.0",
     "tsconfig-paths": "^3.12.0",
     "tslib": "^2.0.0",
-    "typescript": "^4.4.4"
+    "typescript": "^4.4.4",
+    "vite": "^3.0.0"
   },
   "type": "module",
   "dependencies": {
