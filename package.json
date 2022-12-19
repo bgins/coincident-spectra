@@ -12,8 +12,8 @@
     "format": "prettier --write --plugin-search-dir=. ."
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "1.0.0-next.41",
-    "@sveltejs/kit": "^1.0.0-next.406",
+    "@sveltejs/adapter-static": "1.0.0-next.50",
+    "@sveltejs/kit": "^1.0.0-next.588",
     "@tailwindcss/typography": "^0.5.2",
     "@types/webmidi": "^2.0.6",
     "@typescript-eslint/eslint-plugin": "^4.33.0",
@@ -37,7 +37,7 @@
     "tsconfig-paths": "^3.12.0",
     "tslib": "^2.0.0",
     "typescript": "^4.4.4",
-    "vite": "^3.0.0"
+    "vite": "^4.0.0"
   },
   "type": "module",
   "dependencies": {
