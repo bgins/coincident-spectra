@@ -2,11 +2,9 @@ module.exports = {
   mode: "jit",
   purge: {
     content: ["./src/**/*.{html,js,svelte,ts}"],
-    options: {
-      safelist: [/data-theme$/],
-    },
   },
   plugins: [require("@tailwindcss/typography"),require("daisyui")],
+  safelist: [/data-theme$/],
   daisyui: {
     styled: true,
     themes: ["halloween"],
