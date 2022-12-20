@@ -1,5 +1,6 @@
 .eslintrc.cjs
 svelte.config.js
+tailwind.config.cjs
 tsnode-loader.js
-src/hooks.ts
+vite.config.ts
 src/lib/controllers/keyboard.ts
