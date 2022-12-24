@@ -2,7 +2,7 @@
   "name": "coincident-spectra",
   "version": "0.1.0",
   "scripts": {
-    "dev": "vite dev --port 3000",
+    "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
     "test": "ava src/**/*.test.ts",
@@ -23,7 +23,6 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-svelte3": "^3.2.1",
-    "one-webcrypto": "^1.0.1",
     "prettier": "~2.2.1",
     "prettier-plugin-svelte": "^2.2.0",
     "rehype-autolink-headings": "^6.1.0",
@@ -41,8 +40,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@elemaudio/core": "^1.0.5",
-    "@elemaudio/web-renderer-lite": "^1.0.0",
+    "@elemaudio/core": "^1.0.8",
+    "@elemaudio/web-renderer": "^1.0.16",
     "rxjs": "^7.5.4"
   },
   "ava": {
