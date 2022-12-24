@@ -2,7 +2,7 @@
   "name": "coincident-spectra",
   "version": "0.1.0",
   "scripts": {
-    "dev": "vite dev --port 3000",
+    "dev": "vite dev",
     "build": "vite build",
     "preview": "vite preview",
     "test": "ava src/**/*.test.ts",
