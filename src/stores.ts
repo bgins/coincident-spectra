@@ -2,7 +2,7 @@ import type { Writable } from 'svelte/store'
 import { writable } from 'svelte/store'
 
 import type { MidiStatus } from '$lib/controllers/midi'
-import type WebAudioRenderer from '@elemaudio/web-renderer-lite'
+import type WebAudioRenderer from '@elemaudio/web-renderer'
 
 type AudioStore = {
   context: AudioContext

@@ -2,7 +2,7 @@ import type { NodeRepr_t } from '@elemaudio/core'
 
 import { el } from '@elemaudio/core'
 import { get } from 'svelte/store'
-import WebRenderer from '@elemaudio/web-renderer-lite'
+import WebRenderer from '@elemaudio/web-renderer'
 
 import { additiveSynth } from '$lib/audio/additive-synth'
 import { tune } from '$lib/audio/tuning'
