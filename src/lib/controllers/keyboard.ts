@@ -5,6 +5,7 @@ import type { EventEmitter } from '$lib/common/event-emitter'
 
 const keyDowns = fromEvent<KeyboardEvent>(document, 'keydown')
 const keyUps = fromEvent<KeyboardEvent>(document, 'keyup')
+const pageVisibility = fromEvent<Event>(document, 'visibilitychange')
 
 const keyPresses =
   keyDowns.pipe(
@@ -70,6 +71,7 @@ const midiNotes = {
 export class Keyboard {
   noteEmitter: EventEmitter
   keySubscription: Subscription
+  pageVisibilitySubscription: Subscription
 
   enable(noteEmitter: EventEmitter) {
     if (this.noteEmitter) {
@@ -78,11 +80,12 @@ export class Keyboard {
 
     this.noteEmitter = noteEmitter
 
+    // Subsribe to keyups and keydowns to play and stop notes
     if (!this.keySubscription) {
       this.keySubscription = keyPresses.subscribe(key => {
         const midiNote = midiNotes[key.code]
 
-        if (midiNote !== undefined) {
+        if (midiNote) {
           switch (key.type) {
             case 'keydown':
               if (!key.shiftKey && !key.ctrlKey && !key.altKey && !key.metaKey) {
@@ -100,6 +103,15 @@ export class Keyboard {
         }
       });
     }
+
+    // Stop all notes when the window loses focus
+    if (!this.pageVisibilitySubscription) {
+      this.pageVisibilitySubscription = pageVisibility.subscribe(() => {
+        if (document.hidden) {
+          this.noteEmitter.dispatchEvent('stopAll')
+        }
+      })
+    }
   }
 
   disable() {
@@ -109,6 +121,7 @@ export class Keyboard {
 
     this.noteEmitter = null;
     this.keySubscription.unsubscribe()
+    this.pageVisibilitySubscription.unsubscribe()
     this.keySubscription = null;
   }
 }
