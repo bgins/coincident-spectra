@@ -47,8 +47,8 @@
     synth.pause(noteEmitter)
   }
 
-  const setTuning = event => {
-    const { value: selectedTuning } = event.target as HTMLInputElement
+  const setTuning = (event: { currentTarget: HTMLSelectElement }) => {
+    const { value: selectedTuning } = event.currentTarget
 
     synth.stopAllNotes()
     tuning.set(selectedTuning)
@@ -60,8 +60,8 @@
     }
   }
 
-  const setController = event => {
-    const { value: controller } = event.target as HTMLInputElement
+  const setController = (event: { currentTarget: HTMLSelectElement }) => {
+    const { value: controller } = event.currentTarget
 
     if (controller === 'MIDI') {
       keyboard.disable()
@@ -72,14 +72,14 @@
     }
   }
 
-  const setMidiInput = event => {
-    const { value: name } = event.target as HTMLInputElement
+  const setMidiInput = (event: { currentTarget: HTMLSelectElement }) => {
+    const { value: name } = event.currentTarget
 
     midi.setInput(name)
   }
 
-  const setDrawbar = (index: number, event: Event) => {
-    const { value } = event.target as HTMLInputElement
+  const setDrawbar = (index: number, event: { currentTarget: HTMLInputElement }) => {
+    const { value } = event.currentTarget
 
     drawbars.update(drawbars => {
       drawbars[index] = +value / 1000
@@ -89,9 +89,9 @@
     synth.updateParams()
   }
 
-  const setPartials = event => {
-    const { value: selected } = event.target as HTMLInputElement
-
+  
+  const setPartials = (event: { currentTarget: HTMLSelectElement })  => {
+    const { value: selected } = event.currentTarget
 
     if (selected === 'harmonics') {
       setHarmonics()
