@@ -92,6 +92,7 @@
   const setPartials = event => {
     const { value: selected } = event.target as HTMLInputElement
 
+
     if (selected === 'harmonics') {
       setHarmonics()
     } else {
@@ -115,11 +116,11 @@
         <div class="grid justify-end items-center pt-1 pr-2">
           <button>
             {#if view === 'instrument'}
-              <div class="tooltip" data-tip="Show Info" on:click={showInfo}>
+              <div class="tooltip" data-tip="Show Info" on:click={showInfo} on:keydown={showInfo}>
                 <img src="information.svg" alt="Show information" />
               </div>
             {:else}
-              <div on:click={hideInfo} class="pb-1">
+              <div on:click={hideInfo} on:keydown={hideInfo} class="pb-1">
                 <img src="close.svg" alt="Hide information" />
               </div>
             {/if}
