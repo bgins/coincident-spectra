@@ -1,17 +1,19 @@
 <script lang="ts">
   import { onMount } from 'svelte'
 
-  import { setHarmonics, setSpectra } from '$lib/audio/additive-synth'
+  import { isPartials } from '$lib/audio/partials'
+  import { setPartialsTable } from '$lib/audio/additive-synth'
   import { Synth } from '$lib/audio/audio'
   import { Keyboard } from '$lib/controllers/keyboard'
   import { Midi } from '$lib/controllers/midi'
   import { EventEmitter } from '$lib/common/event-emitter'
-  import partials from '$lib/audio/partials.json'
+  import partialsData from '$lib/audio/partials.json'
   import {
     audioStore,
     drawbars,
     midiInputs,
     midiStatus,
+    partials,
     tuning
   } from '../stores'
   import Guide from '$components/Guide.svelte'
@@ -23,7 +25,6 @@
   const midi = new Midi()
   const synth = new Synth()
   let view: View = 'instrument'
-  let selectedPartials = 'harmonics'
 
   keyboard.enable(noteEmitter)
 
@@ -52,12 +53,7 @@
 
     synth.stopAllNotes()
     tuning.set(selectedTuning)
-
-    if (selectedPartials === 'harmonics') {
-      setHarmonics()
-    } else {
-      setSpectra()
-    }
+    setPartialsTable()
   }
 
   const setController = (event: { currentTarget: HTMLSelectElement }) => {
@@ -78,7 +74,10 @@
     midi.setInput(name)
   }
 
-  const setDrawbar = (index: number, event: { currentTarget: HTMLInputElement }) => {
+  const setDrawbar = (
+    index: number,
+    event: { currentTarget: HTMLInputElement }
+  ) => {
     const { value } = event.currentTarget
 
     drawbars.update(drawbars => {
@@ -89,18 +88,16 @@
     synth.updateParams()
   }
 
-  
-  const setPartials = (event: { currentTarget: HTMLSelectElement })  => {
+  const setPartials = (event: { currentTarget: HTMLSelectElement }) => {
     const { value: selected } = event.currentTarget
 
-    if (selected === 'harmonics') {
-      setHarmonics()
+    if (isPartials(selected)) {
+      partials.set(selected)
+      setPartialsTable()
+      synth.updateParams()
     } else {
-      setSpectra()
+      console.error('Invalid partials selection: ', selected)
     }
-
-    selectedPartials = selected
-    synth.updateParams()
   }
 </script>
 
@@ -116,7 +113,12 @@
         <div class="grid justify-end items-center pt-1 pr-2">
           <button>
             {#if view === 'instrument'}
-              <div class="tooltip" data-tip="Show Info" on:click={showInfo} on:keydown={showInfo}>
+              <div
+                class="tooltip"
+                data-tip="Show Info"
+                on:click={showInfo}
+                on:keydown={showInfo}
+              >
                 <img src="information.svg" alt="Show information" />
               </div>
             {:else}
@@ -197,16 +199,18 @@
                 </tr>
               </thead>
               <tbody>
-                {#each partials[$tuning].harmonics as harmonic, index}
+                {#each partialsData[$tuning].harmonics as harmonic, index}
                   <tr>
                     <th>{index + 1}</th>
                     <td>{harmonic}</td>
-                    <td>{partials[$tuning].spectra[index] ?? '—'}</td>
+                    <td>{partialsData[$tuning].spectra[index] ?? '—'}</td>
                     <td>
-                      {#if selectedPartials === 'harmonics' || (selectedPartials === 'spectra' && partials[$tuning].spectra[index])}
+                      {#if $partials === 'harmonics' || ($partials === 'spectra' && partialsData[$tuning].spectra[index])}
                         <div
                           class="tooltip tooltip-left w-full"
-                          data-tip={(Math.trunc($drawbars[index] * 10000) / 10).toString()}
+                          data-tip={(
+                            Math.trunc($drawbars[index] * 10000) / 10
+                          ).toString()}
                         >
                           <input
                             type="range"
