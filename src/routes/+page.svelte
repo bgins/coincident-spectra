@@ -16,6 +16,7 @@
     partials,
     tuning
   } from '../stores'
+  import Controls from '$components/Controls.svelte'
   import Guide from '$components/Guide.svelte'
 
   type View = 'instrument' | 'info'
@@ -130,6 +131,7 @@
         </div>
       </div>
       {#if view === 'instrument'}
+        <Controls {synth}></Controls>
         <div class="grid grid-flow-row auto-rows-max gap-7">
           <div class="grid grid-flow-col auto-cols-max gap-4">
             {#if $audioStore.contextState === 'running'}
