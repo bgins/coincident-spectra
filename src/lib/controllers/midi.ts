@@ -39,13 +39,8 @@ export class Midi {
     this.noteEmitter = noteEmitter
     const status = get(midiStatus)
 
-    if (status !== 'unavailable' && this.midiAccess) {
+    if (this.midiAccess && status !== 'unavailable') {
       midiStatus.set('enabled')
-      const firstInput = this.midiAccess.inputs.entries().next().value
-
-      if (firstInput) {
-        this.setInput(firstInput[1].name)
-      }
     }
   }
 

@@ -4,15 +4,11 @@
   import { isPartials } from '$lib/audio/partials'
   import { setPartialsTable } from '$lib/audio/additive-synth'
   import { Synth } from '$lib/audio/audio'
-  import { Keyboard } from '$lib/controllers/keyboard'
-  import { Midi } from '$lib/controllers/midi'
   import { EventEmitter } from '$lib/common/event-emitter'
   import partialsData from '$lib/audio/partials.json'
   import {
     audioStore,
     drawbars,
-    midiInputs,
-    midiStatus,
     partials,
     tuning
   } from '../stores'
@@ -22,12 +18,8 @@
   type View = 'instrument' | 'info'
 
   const noteEmitter = new EventEmitter()
-  const keyboard = new Keyboard()
-  const midi = new Midi()
   const synth = new Synth()
   let view: View = 'instrument'
-
-  keyboard.enable(noteEmitter)
 
   onMount(async () => {
     await synth.initialize()
@@ -55,24 +47,6 @@
     synth.stopAllNotes()
     tuning.set(selectedTuning)
     setPartialsTable()
-  }
-
-  const setController = (event: { currentTarget: HTMLSelectElement }) => {
-    const { value: controller } = event.currentTarget
-
-    if (controller === 'MIDI') {
-      keyboard.disable()
-      midi.enable(noteEmitter)
-    } else if (controller === 'Keyboard') {
-      midi.disable()
-      keyboard.enable(noteEmitter)
-    }
-  }
-
-  const setMidiInput = (event: { currentTarget: HTMLSelectElement }) => {
-    const { value: name } = event.currentTarget
-
-    midi.setInput(name)
   }
 
   const setDrawbar = (
@@ -131,7 +105,7 @@
         </div>
       </div>
       {#if view === 'instrument'}
-        <Controls {synth}></Controls>
+        <Controls {noteEmitter} {synth}></Controls>
         <div class="grid grid-flow-row auto-rows-max gap-7">
           <div class="grid grid-flow-col auto-cols-max gap-4">
             {#if $audioStore.contextState === 'running'}
@@ -160,35 +134,6 @@
               <option value="harmonics">Harmonics</option>
               <option value="spectra">Spectra</option>
             </select>
-            <select
-              class="select w-full max-w-xs select-primary"
-              on:change={setController}
-            >
-              <option>Keyboard</option>
-              {#if $midiStatus !== 'unavailable'}
-                <option>MIDI</option>
-              {/if}
-            </select>
-            {#if $midiStatus === 'enabled'}
-              <select
-                class="select w-full max-w-xs select-primary"
-                on:change={setMidiInput}
-              >
-                {#each Object.keys($midiInputs) as midiInput}
-                  <option>{midiInput}</option>
-                {/each}
-              </select>
-            {:else if $midiStatus === 'unavailable'}
-              <div class="tooltip" data-tip="MIDI unavailable in this browser">
-                <select disabled class="select w-full max-w-xs select-primary">
-                  <option disabled selected>MIDI Device</option>
-                </select>
-              </div>
-            {:else}
-              <select disabled class="select w-full max-w-xs select-primary">
-                <option disabled selected>MIDI Device</option>
-              </select>
-            {/if}
           </div>
           <div class="overflow-x-auto">
             <table class="table table-compact w-full">
