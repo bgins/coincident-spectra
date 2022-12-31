@@ -1,17 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte'
 
-  import { isPartials } from '$lib/audio/partials'
-  import { setPartialsTable } from '$lib/audio/additive-synth'
   import { Synth } from '$lib/audio/audio'
   import { EventEmitter } from '$lib/common/event-emitter'
   import partialsData from '$lib/audio/partials.json'
-  import {
-    audioStore,
-    drawbars,
-    partials,
-    tuning
-  } from '../stores'
+  import { drawbars, partials, tuning } from '../stores'
   import Controls from '$components/Controls.svelte'
   import Guide from '$components/Guide.svelte'
 
@@ -33,22 +26,6 @@
     view = 'instrument'
   }
 
-  const startAudio = () => {
-    synth.start(noteEmitter)
-  }
-
-  const pauseAudio = () => {
-    synth.pause(noteEmitter)
-  }
-
-  const setTuning = (event: { currentTarget: HTMLSelectElement }) => {
-    const { value: selectedTuning } = event.currentTarget
-
-    synth.stopAllNotes()
-    tuning.set(selectedTuning)
-    setPartialsTable()
-  }
-
   const setDrawbar = (
     index: number,
     event: { currentTarget: HTMLInputElement }
@@ -61,18 +38,6 @@
     })
 
     synth.updateParams()
-  }
-
-  const setPartials = (event: { currentTarget: HTMLSelectElement }) => {
-    const { value: selected } = event.currentTarget
-
-    if (isPartials(selected)) {
-      partials.set(selected)
-      setPartialsTable()
-      synth.updateParams()
-    } else {
-      console.error('Invalid partials selection: ', selected)
-    }
   }
 </script>
 
@@ -105,36 +70,8 @@
         </div>
       </div>
       {#if view === 'instrument'}
-        <Controls {noteEmitter} {synth}></Controls>
         <div class="grid grid-flow-row auto-rows-max gap-7">
-          <div class="grid grid-flow-col auto-cols-max gap-4">
-            {#if $audioStore.contextState === 'running'}
-              <button class="btn btn-primary" on:click={pauseAudio}>
-                Pause Audio
-              </button>
-            {:else}
-              <button class="btn btn-primary" on:click={startAudio}>
-                Start Audio
-              </button>
-            {/if}
-            <select
-              class="select w-full max-w-xs select-primary"
-              on:change={setTuning}
-            >
-              <option disabled selected value="ED2-12">Tuning System</option>
-              <option value="ED2-5">5-TET</option>
-              <option value="ED2-8">8-TET</option>
-              <option value="ED2-12">12-TET</option>
-              <option value="ED2-13">13-TET</option>
-            </select>
-            <select
-              class="select w-full max-w-xs select-primary"
-              on:change={setPartials}
-            >
-              <option value="harmonics">Harmonics</option>
-              <option value="spectra">Spectra</option>
-            </select>
-          </div>
+          <Controls {noteEmitter} {synth} />
           <div class="overflow-x-auto">
             <table class="table table-compact w-full">
               <thead>
