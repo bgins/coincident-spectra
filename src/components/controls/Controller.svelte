@@ -2,13 +2,14 @@
   import { onDestroy } from 'svelte'
 
   import type { EventEmitter } from '$lib/common/event-emitter'
+  import type { NoteEventMap } from '$lib/controllers'
   import type { Synth } from '$lib/audio/audio'
 
   import { midiInputs } from '../../stores'
   import { Keyboard } from '$lib/controllers/keyboard'
   import { Midi } from '$lib/controllers/midi'
 
-  export let noteEmitter: EventEmitter
+  export let noteEmitter: EventEmitter<NoteEventMap>
   export let synth: Synth
 
   const keyboard = new Keyboard()

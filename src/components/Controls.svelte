@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { EventEmitter } from '$lib/common/event-emitter'
+  import type { NoteEventMap } from '$lib/controllers'
   import type { Synth } from '$lib/audio/audio'
 
   import { audioStore } from '../stores'
@@ -7,7 +8,7 @@
   import Partials from '$components/controls/Partials.svelte'
   import Tuning from '$components/controls/Tuning.svelte'
 
-  export let noteEmitter: EventEmitter
+  export let noteEmitter: EventEmitter<NoteEventMap>
   export let synth: Synth
 
   const startAudio = () => {

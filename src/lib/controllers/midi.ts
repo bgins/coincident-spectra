@@ -2,12 +2,13 @@ import { get } from 'svelte/store'
 import { midiInputs, midiStatus } from '../../stores'
 
 import type { EventEmitter } from '$lib/common/event-emitter'
+import type { NoteEventMap } from '$lib/controllers'
 
 export type MidiStatus = 'enabled' | 'disabled' | 'unavailable'
 
 export class Midi {
   midiAccess: WebMidi.MIDIAccess
-  noteEmitter: EventEmitter
+  noteEmitter: EventEmitter<NoteEventMap>
   abortController = new AbortController()
 
   constructor() {
@@ -35,7 +36,7 @@ export class Midi {
     }
   }
 
-  enable = (noteEmitter: EventEmitter): void => {
+  enable = (noteEmitter: EventEmitter<NoteEventMap>): void => {
     this.noteEmitter = noteEmitter
     const status = get(midiStatus)
 
@@ -63,12 +64,12 @@ export class Midi {
           switch (status) {
             case '0x90':
               midiNote = data[1]
-              this.noteEmitter.dispatchEvent('play', midiNote)
+              this.noteEmitter.emit('play', { midiNote })
               break
 
             case '0x80':
               midiNote = data[1]
-              this.noteEmitter.dispatchEvent('stop', midiNote)
+              this.noteEmitter.emit('stop', { midiNote })
               break
 
             default:
@@ -83,7 +84,7 @@ export class Midi {
 
   disable = (): void => {
     if (this.noteEmitter) {
-      this.noteEmitter.dispatchEvent('stopAll')
+      this.noteEmitter.emit('stopAll')
     }
 
     this.abortController.abort()

@@ -2,6 +2,7 @@ import { fromEvent, Subscription } from 'rxjs'
 import { distinctUntilChanged, mergeWith, mergeMap, groupBy } from 'rxjs/operators'
 
 import type { EventEmitter } from '$lib/common/event-emitter'
+import type { NoteEventMap } from '$lib/controllers'
 
 const keyDowns = fromEvent<KeyboardEvent>(document, 'keydown')
 const keyUps = fromEvent<KeyboardEvent>(document, 'keyup')
@@ -69,13 +70,13 @@ const midiNotes = {
 
 
 export class Keyboard {
-  noteEmitter: EventEmitter
+  noteEmitter: EventEmitter<NoteEventMap>
   keySubscription: Subscription
   pageVisibilitySubscription: Subscription
 
-  enable(noteEmitter: EventEmitter) {
+  enable(noteEmitter: EventEmitter<NoteEventMap>) {
     if (this.noteEmitter) {
-      this.noteEmitter.dispatchEvent('stopAll')
+      this.noteEmitter.emit('stopAll')
     }
 
     this.noteEmitter = noteEmitter
@@ -89,12 +90,12 @@ export class Keyboard {
           switch (key.type) {
             case 'keydown':
               if (!key.shiftKey && !key.ctrlKey && !key.altKey && !key.metaKey) {
-                this.noteEmitter.dispatchEvent('play', midiNote)
+                this.noteEmitter.emit('play', { midiNote })
               }
               break;
 
             case 'keyup':
-              this.noteEmitter.dispatchEvent('stop', midiNote)
+              this.noteEmitter.emit('stop', { midiNote })
               break;
 
             default:
@@ -108,7 +109,7 @@ export class Keyboard {
     if (!this.pageVisibilitySubscription) {
       this.pageVisibilitySubscription = pageVisibility.subscribe(() => {
         if (document.hidden) {
-          this.noteEmitter.dispatchEvent('stopAll')
+          this.noteEmitter.emit('stopAll')
         }
       })
     }
@@ -116,7 +117,7 @@ export class Keyboard {
 
   disable() {
     if (this.noteEmitter) {
-      this.noteEmitter.dispatchEvent('stopAll')
+      this.noteEmitter.emit('stopAll')
     }
 
     this.noteEmitter = null;

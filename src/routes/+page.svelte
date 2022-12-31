@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
 
+  import type { NoteEventMap } from '$lib/controllers'
   import { Synth } from '$lib/audio/audio'
   import { EventEmitter } from '$lib/common/event-emitter'
   import partialsData from '$lib/audio/partials.json'
@@ -10,7 +11,7 @@
 
   type View = 'instrument' | 'info'
 
-  const noteEmitter = new EventEmitter()
+  const noteEmitter: EventEmitter<NoteEventMap> = new EventEmitter()
   const synth = new Synth()
   let view: View = 'instrument'
 
