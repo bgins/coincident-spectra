@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Synth } from '$lib/audio/audio'
 
+  import { isKeyboardNoteEvent } from '$lib/controllers/keyboard'
   import { isPartials } from '$lib/audio/partials'
   import { partials } from '../../stores'
   import { setPartialsTable } from '$lib/audio/additive-synth'
@@ -12,9 +13,7 @@
     currentTarget: HTMLButtonElement
     code?: string
   }) => {
-    if (event.type === 'keypress' && event.code !== 'Enter') {
-      return
-    }
+    if (isKeyboardNoteEvent(event)) return
 
     const { textContent } = event.currentTarget
     const selected = textContent.toLowerCase()
@@ -35,13 +34,15 @@
     class:btn-active={$partials === 'harmonics'}
     on:click={setPartials}
     on:keypress={setPartials}
-    >Harmonics
+  >
+    Harmonics
   </button>
   <button
     class="btn btn-primary btn-outline"
     class:btn-active={$partials === 'spectra'}
     on:click={setPartials}
     on:keypress={setPartials}
-    >Spectra
+  >
+    Spectra
   </button>
 </div>

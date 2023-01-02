@@ -1,5 +1,7 @@
 <script lang="ts">
   import type { Synth } from '$lib/audio/audio'
+
+  import { isKeyboardNoteEvent } from '$lib/controllers/keyboard'
   import { setPartialsTable } from '$lib/audio/additive-synth'
   import { tuning } from '../../stores'
 
@@ -8,7 +10,13 @@
   const tunings = ['ED2-5', 'ED2-8', 'ED2-12', 'ED2-13']
   let modalState: 'open' | 'closed' = 'closed'
 
-  const setTuning = (event: { currentTarget: HTMLButtonElement }) => {
+  const setTuning = (event: {
+    type: string
+    currentTarget: HTMLButtonElement
+    code?: string
+  }) => {
+    if (isKeyboardNoteEvent(event)) return
+
     const { textContent: selectedTuning } = event.currentTarget
 
     synth.stopAllNotes()
@@ -18,11 +26,15 @@
     modalState = 'closed'
   }
 
-  const openModal = () => {
+  const openModal = (event: Event) => {
+    if (isKeyboardNoteEvent(event)) return
+
     modalState = 'open'
   }
 
-  const closeModal = () => {
+  const closeModal = (event: Event) => {
+    if (isKeyboardNoteEvent(event)) return
+
     modalState = 'closed'
   }
 </script>
@@ -63,8 +75,8 @@
           {/each}
           <p class="text-xs italic">
             ED2 stands for equal division of the second harmonic, which is the
-            octave. 12-ED2 is 12-tone equal temperament, where we divide
-            the octave into twelve equal parts.
+            octave. 12-ED2 is 12-tone equal temperament, where we divide the
+            octave into twelve equal parts.
           </p>
         </div>
       </div>

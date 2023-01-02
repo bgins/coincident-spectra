@@ -126,3 +126,12 @@ export class Keyboard {
     this.keySubscription = null;
   }
 }
+
+
+export const isKeyboardNoteEvent = ((event: { type: string; code?: string }) => {
+  return (
+    event.type === 'keypress' ||
+    event.type === 'keyup' ||
+    event.type === 'keydown'
+  ) && event.code in midiNotes
+})
