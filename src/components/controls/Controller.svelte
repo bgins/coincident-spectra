@@ -6,61 +6,63 @@
   import type { Synth } from '$lib/audio/audio'
 
   import { midiInputs } from '../../stores'
-  import { Keyboard } from '$lib/controllers/keyboard'
+  import { isKeyboardNoteEvent, Keyboard } from '$lib/controllers/keyboard'
   import { Midi } from '$lib/controllers/midi'
 
   export let noteEmitter: EventEmitter<NoteEventMap>
   export let synth: Synth
 
+  type Controller = {
+    name: string
+    type: 'keyboard' | 'midi'
+  }
+
   const keyboard = new Keyboard()
   const midi = new Midi()
 
-  let controller = { name: 'Keyboard', type: 'keyboard' }
-  let controllers = [controller]
+  const keyboardController: Controller = { name: 'Keyboard', type: 'keyboard' }
+  let controller = keyboardController
+  let controllers: Controller[] = [keyboardController]
   let modalState: 'open' | 'closed' = 'closed'
 
   keyboard.enable(noteEmitter)
 
   const unsubscribeMidiInputs = midiInputs.subscribe(inputs => {
-    const devices = Object.keys(inputs).map(name => ({ name, type: 'midi' }))
+    const devices: Controller[] = inputs.map(name => ({ name, type: 'midi' }))
 
-    controllers = [
-      ...controllers.filter(({ type }) => type !== 'midi'),
-      ...devices
-    ]
+    controllers = [keyboardController, ...devices]
+
+    // Reset to keyboard when a MIDI device is disconnected
+    if (!controllers.some(c => c.name === controller.name)) {
+      setController(0)
+      controller = keyboardController
+      modalState = 'closed'
+    }
   })
 
   const setController = (
     index: number,
-    event: {
-      type: string
-      currentTarget: HTMLButtonElement
-      code?: string
-    }
+    event?: Event
   ) => {
-    // Filter out keyboard note events
-    if (event.type === 'keypress' && event.code !== 'Enter') {
-      return
-    }
+    if (event && isKeyboardNoteEvent(event)) return
 
     const selectedController = controllers[index]
 
     synth.stopAllNotes()
 
-    switch (controller.type) {
+    switch (selectedController.type) {
       case 'keyboard':
-        if (selectedController.type === 'midi') {
-          keyboard.disable()
-        }
-        midi.enable(noteEmitter)
-        midi.setInput(selectedController.name)
-        break
-
-      case 'midi':
-        if (selectedController.type === 'keyboard') {
+        if (controller.type === 'midi') {
           midi.disable()
         }
         keyboard.enable(noteEmitter)
+        break
+
+      case 'midi':
+        if (controller.type === 'keyboard') {
+          keyboard.disable()
+        }
+        midi.enable(selectedController.name, noteEmitter)
         break
     }
 
@@ -68,11 +70,15 @@
     modalState = 'closed'
   }
 
-  const openModal = () => {
+  const openModal = (event: Event) => {
+    if (isKeyboardNoteEvent(event)) return
+
     modalState = 'open'
   }
 
-  const closeModal = () => {
+  const closeModal = (event: Event) => {
+    if (isKeyboardNoteEvent(event)) return
+
     modalState = 'closed'
   }
 
@@ -95,7 +101,7 @@
   <div
     class="modal modal-open"
     on:click|self={closeModal}
-    on:keypress|self={closeModal}
+    on:keydown|self={closeModal}
   >
     <div class="modal-box relative sm:w-5/6 md:w-80">
       <div class="grid grid-flow-row auto-rows-max gap-3 w-full">

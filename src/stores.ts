@@ -27,4 +27,4 @@ export const tuning: Writable<string> = writable('ED2-12')
 
 export const midiStatus: Writable<MidiStatus> = writable('disabled')
 
-export const midiInputs: Writable<Record<string, WebMidi.MIDIInput>> = writable({})
+export const midiInputs: Writable<string[]> = writable([] as string[])
