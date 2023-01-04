@@ -40,10 +40,7 @@
     }
   })
 
-  const setController = (
-    index: number,
-    event?: Event
-  ) => {
+  const setController = (index: number, event?: Event) => {
     if (event && isKeyboardNoteEvent(event)) return
 
     const selectedController = controllers[index]
