@@ -58,17 +58,15 @@
     on:keypress|self={closeModal}
   >
     <div class="modal-box relative sm:w-5/6 md:w-80">
-      <div class="grid grid-flow-row auto-rows-max gap-3 justify-center">
-        <div class="justify-center">
-          <h2 class="text-2xl">Tuning System</h2>
-        </div>
+      <div class="grid grid-flow-row auto-rows-max gap-3">
+        <h2 class="text-2xl">Tuning System</h2>
 
         <div class="grid grid-flow-row auto-rows-max gap-2">
           {#each tunings as tuning}
             <button
               class="btn btn-wide btn-primary w-full"
-              on:click|self={setTuning}
-              on:keypress|self={setTuning}
+              on:click|stopPropagation={setTuning}
+              on:keypress|stopPropagation={setTuning}
             >
               {tuning}
             </button>
