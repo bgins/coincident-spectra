@@ -5,7 +5,7 @@ import { createNode, el, resolve } from '@elemaudio/core'
 import { get } from 'svelte/store'
 
 import { halve } from '$lib/utils'
-import { drawbars, tuning } from '../../stores'
+import { drawbars, partials as partialsStore, tuning } from '../../stores'
 import partialsData_ from '$lib/audio/partials.json'
 
 
@@ -24,8 +24,10 @@ type AdditiveVoiceProps = {
 
 
 const selectedTuning = get(tuning)
+const selectedPartials = get(partialsStore)
+
 const partialsData = partialsData_ as PartialsData
-let partials: number[] = partialsData[selectedTuning].harmonics
+let partials: number[] = partialsData[selectedTuning][selectedPartials]
 
 export const additiveSynth = (voices: Voice[]): number | NodeRepr_t => {
   let gains = []
@@ -67,12 +69,8 @@ const additiveVoice = ({ props }): NodeRepr_t => {
     ))
 }
 
-export const setHarmonics = (): void => {
+export const setPartialsTable = (): void => {
   const selectedTuning = get(tuning)
-  partials = partialsData[selectedTuning].harmonics
-}
-
-export const setSpectra = (): void => {
-  const selectedTuning = get(tuning)
-  partials = partialsData[selectedTuning].spectra
+  const selectedPartials = get(partialsStore)
+  partials = partialsData[selectedTuning][selectedPartials]
 }

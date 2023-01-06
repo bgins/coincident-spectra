@@ -1,9 +1,9 @@
 import type { NodeRepr_t } from '@elemaudio/core'
-
 import { el } from '@elemaudio/core'
 import { get } from 'svelte/store'
 import WebRenderer from '@elemaudio/web-renderer'
 
+import type { NoteEventMap } from '$lib/controllers'
 import { additiveSynth } from '$lib/audio/additive-synth'
 import { tune } from '$lib/audio/tuning'
 import { audioStore } from '../../stores'
@@ -52,28 +52,28 @@ export class Synth {
   }
 
 
-  start = (noteEmitter: EventEmitter): void => {
+  start = (noteEmitter: EventEmitter<NoteEventMap>): void => {
     const { context } = get(audioStore)
 
-    noteEmitter.addEventListener('play', this.playNote)
-    noteEmitter.addEventListener('stop', this.stopNote)
-    noteEmitter.addEventListener('stopAll', this.stopAllNotes)
+    noteEmitter.on('play', this.playNote)
+    noteEmitter.on('stop', this.stopNote)
+    noteEmitter.on('stopAll', this.stopAllNotes)
     void context.resume()
     audioStore.update(store => ({ ...store, contextState: 'running' }))
   }
 
-  pause = (noteEmitter: EventEmitter): void => {
+  pause = (noteEmitter: EventEmitter<NoteEventMap>): void => {
     const { context } = get(audioStore)
 
     this.stopAllNotes()
-    noteEmitter.removeEventListener('play', this.playNote)
-    noteEmitter.removeEventListener('stop', this.stopNote)
-    noteEmitter.removeEventListener('stopAll', this.stopAllNotes)
+    noteEmitter.removeListener('play', this.playNote)
+    noteEmitter.removeListener('stop', this.stopNote)
+    noteEmitter.removeListener('stopAll', this.stopAllNotes)
     void context.suspend()
     audioStore.update(store => ({ ...store, contextState: 'suspended' }))
   }
 
-  playNote = (midiNote: number): void => {
+  playNote = ({ midiNote }: { midiNote: number }): void => {
     const { elementaryReady } = get(audioStore)
 
     this.voices = updateVoices(this.voices, midiNote).slice(-8)
@@ -83,7 +83,7 @@ export class Synth {
     }
   }
 
-  stopNote = (midiNote: number): void => {
+  stopNote = ({ midiNote }: { midiNote: number }): void => {
     const { elementaryReady } = get(audioStore)
     const key = `v${midiNote}`
 
