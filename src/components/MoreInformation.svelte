@@ -1,47 +1,5 @@
 <div class="grid grid-flow-row auto-rows-max gap-6">
   <div class="grid grid-flow-row auto-rows-max gap-2">
-    <h2 class="text-2xl">Of Harmonics and Spectra</h2>
-    <p>
-      Coincident Spectra is an additive synthesizer that generates sounds from
-      16 sine wave 'partials' that can be switched between harmonics and
-      spectra. Harmonics are integer multiples of a fundamental frequency.
-      Spectra remap harmonics so that the partials coincide with a selected
-      equal temperament.
-    </p>
-    <p>
-      Coincident spectra reduce sensory dissonance and beating between the
-      timbre and tuning, rendering chords more in tune.
-    </p>
-  </div>
-  <div class="grid grid-flow-row auto-rows-max gap-2">
-    <h2 class="text-2xl">Listen and Compare</h2>
-    <ul class="list-disc list-inside">
-      <li>Select Start Audio to activate the instrument</li>
-      <li>Select Keyboard or a MIDI controller</li>
-      <li>Play notes and chords in Harmonics mode</li>
-      <li>Switch to Spectra mode while holding a chord. Listen and compare.</li>
-    </ul>
-    <p>
-      Play
-      <kbd class="kbd kbd-sm">u</kbd>,
-      <kbd class="kbd kbd-sm">[</kbd>, and
-      <kbd class="kbd kbd-sm">2</kbd>
-      in 12-tone equal temperament (12-TET) for a C-major chord on your computer
-      keyboard.
-    </p>
-    <p>
-      MIDI is available in Chrome and Chromium-based browsers, and it will
-      likely be available in Firefox soon.
-    </p>
-  </div>
-  <div class="grid grid-flow-row auto-rows-max gap-2">
-    <h2 class="text-2xl">Adjust Timbre</h2>
-    <p>
-      The gain sliders control the gain of each partial. Adjusting them
-      changes the timbre of the instrument.
-    </p>
-  </div>
-  <div class="grid grid-flow-row auto-rows-max gap-2">
     <h2 class="text-2xl">Acknowledgments</h2>
     <p>
       Coincident Spectra was inspired by the work of William Sethares. To find

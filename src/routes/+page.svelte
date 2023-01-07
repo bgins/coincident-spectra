@@ -8,7 +8,7 @@
   import { drawbars, partials, tuning } from '../stores'
   import Controls from '$components/Controls.svelte'
   import GetStarted from '$components/controls/GetStarted.svelte'
-  import Guide from '$components/Guide.svelte'
+  import MoreInformation from '$components/MoreInformation.svelte'
 
   type View = 'instrument' | 'info'
 
@@ -43,7 +43,7 @@
   }
 </script>
 
-<GetStarted {noteEmitter} {synth}/>
+<GetStarted {noteEmitter} {synth} />
 
 <div
   class="grid grid-flow-row auto-rows-max justify-center bg-neutral h-screen p-10 text-base-content"
@@ -119,7 +119,7 @@
           </div>
         </div>
       {:else}
-        <Guide />
+        <MoreInformation />
       {/if}
     </div>
   </div>
