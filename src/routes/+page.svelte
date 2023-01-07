@@ -7,6 +7,7 @@
   import partialsData from '$lib/audio/partials.json'
   import { drawbars, partials, tuning } from '../stores'
   import Controls from '$components/Controls.svelte'
+  import GetStarted from '$components/controls/GetStarted.svelte'
   import Guide from '$components/Guide.svelte'
 
   type View = 'instrument' | 'info'
@@ -41,6 +42,8 @@
     synth.updateParams()
   }
 </script>
+
+<GetStarted {noteEmitter} {synth}/>
 
 <div
   class="grid grid-flow-row auto-rows-max justify-center bg-neutral h-screen p-10 text-base-content"
