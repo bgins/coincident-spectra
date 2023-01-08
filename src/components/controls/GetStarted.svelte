@@ -3,15 +3,21 @@
   import type { NoteEventMap } from '$lib/controllers'
   import type { Synth } from '$lib/audio/audio'
 
+  import * as midi from '$lib/controllers/midi'
+
   export let noteEmitter: EventEmitter<NoteEventMap>
   export let synth: Synth
 
   let modalState: 'open' | 'closed' = 'open'
 
-  const getStarted = () => {
+  const getStarted = async () => {
     synth.start(noteEmitter)
 
     modalState = 'closed'
+
+    // The browser will request access to
+    // WebMIDI, so we close the modal first
+    await midi.initialize()
   }
 </script>
 
