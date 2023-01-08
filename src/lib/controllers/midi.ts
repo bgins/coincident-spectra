@@ -8,42 +8,37 @@ import type { NoteEventMap } from '$lib/controllers'
 
 export type MidiStatus = 'enabled' | 'disabled' | 'unavailable'
 
-export class Midi {
-  midiAccess: WebMidi.MIDIAccess
-  inputs: Input[]
-  selectedInput: Input
-  noteEmitter: EventEmitter<NoteEventMap>
-  abortController = new AbortController()
+/** Initialize WebMidi
+ *
+ * WebMidi is initialized before we create an instance of the class.
+ * We initialize in the GetStarted interface and inform the user
+ * the app uses WebMIDI before the browser requests permission.
+ */
+export const initialize = async (): Promise<void> => {
+  try {
+    await WebMidi.enable()
 
-  constructor() {
-    if (navigator.requestMIDIAccess !== undefined) {
-      WebMidi
-        .enable()
-        .then(this.initialize)
-        .catch(err => {
-          console.warn('WebMidi could not be initialized:', err)
-          midiStatus.set('unavailable')
-        })
-    } else {
-      console.warn('WebMidi not available in this browser')
-      midiStatus.set('unavailable')
-    }
-  }
-
-  initialize = (): void => {
-    this.inputs = WebMidi.inputs
-
-    midiInputs.set(getInputNames(this.inputs))
+    midiInputs.set(getInputNames(WebMidi.inputs))
     midiStatus.set('disabled')
 
     WebMidi.addListener('connected', () => {
-      midiInputs.set(getInputNames(this.inputs))
+      midiInputs.set(getInputNames(WebMidi.inputs))
     })
 
     WebMidi.addListener('disconnected', () => {
-      midiInputs.set(getInputNames(this.inputs))
+      midiInputs.set(getInputNames(WebMidi.inputs))
     })
+  } catch (err) {
+    console.warn('WebMidi could not be initialized:', err)
+    midiStatus.set('unavailable')
   }
+
+}
+
+export class Midi {
+  selectedInput: Input
+  noteEmitter: EventEmitter<NoteEventMap>
+  abortController = new AbortController()
 
   enable = (deviceName: string, noteEmitter: EventEmitter<NoteEventMap>): void => {
     const status = get(midiStatus)

@@ -73,8 +73,8 @@
           {/each}
           <p class="text-xs italic">
             ED2 stands for equal division of the second harmonic, which is the
-            octave. 12-ED2 is 12-tone equal temperament, where we divide the
-            octave into twelve equal parts.
+            octave. For example, 12-ED2 divides the octave into twelve equal
+            parts.
           </p>
         </div>
       </div>
