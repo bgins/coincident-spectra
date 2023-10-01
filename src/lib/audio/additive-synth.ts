@@ -1,7 +1,7 @@
-import type { NodeRepr_t } from '@elemaudio/core'
+import type { ElemNode } from '@elemaudio/core'
 import type { Voice } from './audio'
 
-import { createNode, el, resolve } from '@elemaudio/core'
+import { el, resolve } from '@elemaudio/core'
 import { get } from 'svelte/store'
 
 import { halve } from '$lib/utils'
@@ -29,8 +29,8 @@ const selectedPartials = get(partialsStore)
 const partialsData = partialsData_ as PartialsData
 let partials: number[] = partialsData[selectedTuning][selectedPartials]
 
-export const additiveSynth = (voices: Voice[]): number | NodeRepr_t => {
-  let gains = []
+export const additiveSynth = (voices: Voice[]): ElemNode => {
+  let gains: number[] = []
 
   drawbars.subscribe(vals => {
     gains = vals
@@ -41,26 +41,26 @@ export const additiveSynth = (voices: Voice[]): number | NodeRepr_t => {
   const filteredPartials = partials.filter(partial => partial !== null)
 
   return el.add(...voices.map(voice => {
-    return createNode(additiveVoice, { voice, partials: filteredPartials, gains: filteredGains }, [])
+    return additiveVoice({ voice, partials: filteredPartials, gains: filteredGains })
   }))
 }
 
 
-const additiveVoice = ({ props }): NodeRepr_t => {
-  const { voice, partials, gains } = props as AdditiveVoiceProps
+const additiveVoice = (props: AdditiveVoiceProps): ElemNode => {
+  const { voice, partials, gains } = props
 
   const { firstHalf: firstGains, secondHalf: secondGains } = halve(gains)
   const { firstHalf: firstPartials, secondHalf: secondPartials } = halve(partials)
 
   return resolve(
     el.add(
-      el.add(...firstPartials.map((partial: number, index: number): number | NodeRepr_t => {
+      el.add(...firstPartials.map((partial: number, index: number): number | ElemNode => {
         return el.mul(
           el.const({ key: `${voice.key}:gate:l${index}`, value: voice.gate * firstGains[index] }),
           el.cycle(el.const({ key: `${voice.key}:freq:l${index}`, value: voice.freq * partial }))
         )
       })),
-      el.add(...secondPartials.map((partial: number, index: number): number | NodeRepr_t => {
+      el.add(...secondPartials.map((partial: number, index: number): number | ElemNode => {
         return el.mul(
           el.const({ key: `${voice.key}:gate:h${index}`, value: voice.gate * secondGains[index] }),
           el.cycle(el.const({ key: `${voice.key}:freq:h${index}`, value: voice.freq * partial }))

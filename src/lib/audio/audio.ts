@@ -1,4 +1,4 @@
-import type { NodeRepr_t } from '@elemaudio/core'
+import type { ElemNode } from '@elemaudio/core'
 import { el } from '@elemaudio/core'
 import { get } from 'svelte/store'
 import WebRenderer from '@elemaudio/web-renderer'
@@ -127,7 +127,7 @@ const updateVoices = (voices: Voice[], midiNote: number): Voice[] => {
   return voices.filter(voice => voice.key !== key).concat({ gate: 0.1, freq, key })
 }
 
-const render = (ensemble: number | NodeRepr_t): void => {
+const render = (ensemble: ElemNode): void => {
   const { core } = get(audioStore)
   const dcblockOut = el.dcblock(ensemble)
   const gainOut = el.mul(dcblockOut, 3)

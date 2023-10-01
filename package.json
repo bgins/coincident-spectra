@@ -40,8 +40,8 @@
   },
   "type": "module",
   "dependencies": {
-    "@elemaudio/core": "^1.0.8",
-    "@elemaudio/web-renderer": "^1.0.16",
+    "@elemaudio/core": "^3.0.0",
+    "@elemaudio/web-renderer": "^3.0.1",
     "rxjs": "^7.5.4",
     "webmidi": "^3.0.25"
   },
