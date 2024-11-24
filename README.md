@@ -4,7 +4,7 @@ Coincident Spectra is a spectral-microtuning additive synthesizer.
 
 ## Try it
 
-Coincident Spectra is live at: https://coincident-spectra.fission.app/
+Coincident Spectra is live at: https://coincident-spectra.brianginsburg.com/
 
 ## Setup
 
