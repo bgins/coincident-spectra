@@ -15,17 +15,16 @@
       name.
     </p>
     <p>
-      Many thanks to 
+      Many thanks to
       <a
-      class="link link-primary"
-      href="https://jackyligon.com/"
-      target="__blank"
-    >
-      Jacky Ligon 
-    </a>
-      for guiding the development of Coincident
-      Spectra, and for generously providing the social preview image. The image
-      is copyright Jacky Ligon, 2022.
+        class="link link-primary"
+        href="https://jackyligon.com/"
+        target="__blank"
+      >
+        Jacky Ligon
+      </a>
+      for guiding the development of Coincident Spectra, and for generously providing
+      the social preview image. The image is copyright Jacky Ligon, 2022.
     </p>
 
     <p>
@@ -37,7 +36,6 @@
       >
         Elementary Audio
       </a>.
-
     </p>
     <p>
       The
@@ -48,15 +46,7 @@
       >
         source code
       </a>
-      for Coincident Spectra is available under the Apache 2.0 license. Please consult the
-      <a
-        class="link link-primary"
-        href="https://www.elementary.audio/license"
-        target="__blank"
-      >
-      Elementary License
-      </a>
-      for additional instructions on using the Elementary SDK.
-      </p>
+      for Coincident Spectra is available under the Apache 2.0 license.
+    </p>
   </div>
 </div>
